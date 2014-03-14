@@ -9,6 +9,9 @@
 #include <vector>
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <stdio.h>
+#include <cstring>
+#include <string>
 
 class ProcessingThread : public QThread
 {
@@ -17,6 +20,7 @@ private:
     QString *filename;
     QImage *input, *output;
     cv::Mat img_hsv, img_gray;
+    std::vector<cv::Point> object;
     QVector<QRgb> gray_color_table;
     int output_state, hmin, hmax, smin, smax, minarea, epsilon, threshold1, threshold2;
     virtual void run();

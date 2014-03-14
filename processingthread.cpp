@@ -17,6 +17,13 @@ ProcessingThread::ProcessingThread(QObject *parent) :
     epsilon = 0;
     for (int i=0; i<256; i++)
         gray_color_table.push_back(qRgb(i,i,i));
+    //[823, 1616] [701, 1598] [674, 1744] [524, 1732] [507, 1865] [786, 1880]
+    object.push_back(cv::Point(823,1616));
+    object.push_back(cv::Point(701,1598));
+    object.push_back(cv::Point(674,1744));
+    object.push_back(cv::Point(524,1732));
+    object.push_back(cv::Point(507,1865));
+    object.push_back(cv::Point(786,1880));
 }
 
 void ProcessingThread::setInput(QString *filename)
@@ -79,8 +86,14 @@ void ProcessingThread::run()
         {
             cv::approxPolyDP(contours[i], contours[i], epsilon, true);
             cv::drawContours(*img, contours, i, cv::Scalar(0,0,255),3, CV_AA);
+            double match = cv::matchShapes(contours[i], object, CV_CONTOURS_MATCH_I3, 0);
+            char buffer[32];
+            snprintf(buffer, 32, "%g", match);
+            cv::putText(*img, std::string(buffer),contours[i][0], cv::FONT_HERSHEY_SIMPLEX, 2.0, cv::Scalar(255,255,255), 3, CV_AA);
             for(int j = 0; j<contours[i].size(); j++)
+            {
                 cv::circle(*img, contours[i][j], 5, cv::Scalar(255,0,0), -1, CV_AA);
+            }
         }
     }
     if(output_state == 3)
