@@ -6,7 +6,7 @@ ProcessingThread::ProcessingThread(QObject *parent) :
     this->filename = NULL;
     input = NULL;
     output = NULL;
-    output_state = 3;
+    output_state = 0;
     hmin = 0;
     hmax = 180;
     smin = 0;
@@ -60,7 +60,7 @@ void ProcessingThread::run()
         if(img_hsv.data[i*3]<hmin || img_hsv.data[i*3]>hmax || img_hsv.data[i*3+1]<smin || img_hsv.data[i*3+1]>smax)
             img_gray.data[i] = 0;
         else
-            img_gray.data[i] = img->data[i*3+2];
+            img_gray.data[i] = img_hsv.data[i*3+2];
     }
     if(output_state == 1)
     {
